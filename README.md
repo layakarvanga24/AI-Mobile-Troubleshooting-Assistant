@@ -42,3 +42,5 @@ http://127.0.0.1:5000
 
 ## Use Case
 The assistant helps users troubleshoot mobile device issues by retrieving relevant documentation and generating accurate responses using LLM reasoning.
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
