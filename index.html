@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mobile Mart – Best Deals on Smartphones</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fdfdfd;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    nav {
+      background: #111;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      padding: 10px 15px;
+      transition: background 0.3s ease;
+    }
+
+    nav a:hover {
+      background: #007bff;
+      border-radius: 4px;
+    }
+
+    section {
+      padding: 60px 20px;
+      max-width: 1100px;
+      margin: auto;
+      border-bottom: 1px solid #eee;
+    }
+
+    h1, h2 {
+      margin-bottom: 20px;
+      color: #222;
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .hero img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .products div {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .products div:hover {
+      transform: translateY(-5px);
+    }
+
+    .products img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .products p {
+      margin-top: 10px;
+      font-size: 15px;
+    }
+
+    .team-members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .team-member {
+      flex: 1 1 200px;
+      max-width: 250px;
+      text-align: center;
+    }
+
+    .team-member img {
+      width: 150px;
+      height: 150px;
+      border-radius: 60%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .team-member h3 {
+      margin-bottom: 5px;
+    }
+
+    .chat-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .chat-box {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 500px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      display: none;
+      flex-direction: column;
+      padding: 15px;
+      z-index: 999;
+    }
+
+    .chat-box.show {
+      display: flex;
+    }
+
+    .close-chat {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      color: #888;
+    }
+
+    .chat-history {
+      height: 250px;
+      overflow-y: auto;
+      margin-top: 10px;
+      border: 1px solid #eee;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-message {
+      padding: 8px 12px;
+      border-radius: 8px;
+      max-width: 90%;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background: #007bff;
+      color: white;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    .assistant {
+      background: #f1f4f9;
+      color: #222;
+      align-self: flex-start;
+      margin-right: auto;
+      border-left: 4px solid #007bff;
+      padding: 10px;
+      line-height: 1.5;
+    }
+
+    .assistant p {
+      margin: 6px 0;
+    }
+
+    .assistant ol {
+      padding-left: 20px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    .chat-message.typing {
+      font-style: italic;
+      color: #555;
+    }
+
+    textarea {
+      width: 100%;
+      resize: none;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      min-height: 40px;
+      max-height: 150px;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    button[type="submit"] {
+      margin-top: 10px;
+      padding: 8px;
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 600px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+      }
+      .chat-box {
+        width: 90%;
+        right: 5%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="home" class="hero">
+  <h1>Welcome to Mobile Mart</h1>
+  <p>Your one-stop shop for smartphones — honest prices, fast delivery</p>
+  <img src="https://imgs.search.brave.com/ruS7mnjLOvpP7dEpdf3yZgWonSsly5SUXBgT_sGsGP0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0cv/MzEvaW1nMjMvV2ly/ZWxlc3MvQ2F0UGFn/ZS9SZXZhbXAyMDI1/L0FtYXpvblN0b3Jl/cy9SZXZhbXAvQW1h/em9uLVN0b3Jlc18w/MS5fQ0I4MDQzNTU4/NTJfLmpwZw" alt="Smartphone deals" />
+</section>
+
+<section id="products">
+  <h2>Featured Mobiles</h2>
+  <div class="products">
+    <div>
+      <img src="https://images-eu.ssl-images-amazon.com/images/I/71uOLAUpnZL._AC_UL330_SR330,330_.jpg" alt="Realme 13 Pro" />
+      <p><strong>Realme 13 Pro</strong><br />$322</p>
+    </div>
+    <div>
+      <img src="https://m.media-amazon.com/images/I/61eYPkT2zZL._AC_UY327_FMwebp_QL65_.jpg" alt="Iphone 16" />
+      <p><strong>Iphone 16</strong><br />$396</p>
+    </div>
+    <div>
+      <img src="https://m.media-amazon.com/images/I/616ZzloUDIL._AC_UY327_FMwebp_QL65_.jpg" alt="OnePlus Nord" />
+      <p><strong>OnePlus Nord</strong><br />$329</p>
+    </div>
+    <div>
+      <img src="https://m.media-amazon.com/images/I/61p3FwE31-L._AC_UY327_FMwebp_QL65_.jpg" alt="Samsung Galaxy S25" />
+      <p><strong>Samsung Galaxy S25</strong><br />$400</p>
+    </div>
+  </div>
+</section>
+<section id="team">
+  <h2>Our Team</h2>
+  <div class="team-members">
+    <div class="team-member">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDRlp-KGr_M94k_oor4Odjn2UzbAS7n1YoA&s" alt="Bob Martin" />
+      <h3>Bob Martin</h3>
+      <p>Founder & CEO</p>
+    </div>
+    <div class="team-member">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s" alt="Mary Watson" />
+      <h3>Mary Watson</h3>
+      <p>Co-Founder & CTO</p>
+    </div>
+    <div class="team-member">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREO17hg6KvLlweeZWN0LCEdi-OXM9qGpbQ9w&s" alt="John Doe" />
+      <h3>John Doe</h3>
+      <p>Lead Developer</p>
+    </div>
+  </div>
+</section>
+<section id="about">
+  <h2>About Us</h2>
+  <p style="text-align: justify;">
+    At <strong>Mobile Mart</strong>, we are passionate about connecting people with cutting-edge smartphone technology at unbeatable prices. Since our inception in 2020, we've aimed to revolutionize the way people shop for mobile devices by offering a wide range of options from top brands like Apple, Samsung, OnePlus, and Realme. Our platform is designed with you in mind — easy to navigate, transparent in pricing, and secure for every transaction.
+  </p>
+
+  <p style="text-align: justify;">
+    We believe that technology should be accessible to everyone, and that’s why we work closely with leading manufacturers and distributors to bring you the latest devices at fair prices. Our commitment goes beyond just selling phones — we provide exceptional customer service, fast delivery, and expert support to help you make informed choices. Whether you're upgrading your current phone or buying your first smartphone, Mobile Mart is here to ensure a smooth, satisfying experience.
+  </p>
+
+  <p style="text-align: justify;">
+    Join thousands of happy customers who trust Mobile Mart for their mobile needs. From everyday users to tech enthusiasts, we’re proud to be your go-to destination for reliable and affordable smartphones. Experience the Mobile Mart difference today!
+  </p>
+</section>
+
+
+<section id="contact">
+  <h2>Contact Us</h2>
+  <p>We’d love to hear from you! Reach out to us through any of the channels below:</p>
+  <ul>
+    <li><strong>Email:</strong> support@mobilemart.com</li>
+    <li><strong>Phone:</strong> +1 (800) 123-4567</li>
+    <li><strong>Address:</strong> 123 Tech Lane, Silicon Valley, CA</li>
+  </ul>
+  <p>Or chat with us live to resolve any query related to mobile using the chat widget at the bottom right corner of your screen.</p>
+</section>
+
+
+<button class="chat-btn" id="chatBtn" aria-label="Open chat window">💬 Chat</button>
+
+<div class="chat-box" id="chatBox" role="region" aria-live="polite" aria-label="Chat conversation window">
+  <span class="close-chat" id="closeChat" role="button" tabindex="0" aria-label="Close chat window" title="Close chat">×</span>
+  <div class="chat-history" id="chatHistory"></div>
+  <form id="chatForm" aria-label="Send a message">
+    <textarea id="messageInput" rows="2" placeholder="Type your question..." required aria-label="Chat message input"></textarea>
+    <button type="submit" aria-label="Send chat message">Send</button>
+  </form>
+</div>
+
+<script>
+  const chatBtn = document.getElementById("chatBtn");
+  const chatBox = document.getElementById("chatBox");
+  const closeChat = document.getElementById("closeChat");
+  const chatForm = document.getElementById("chatForm");
+  const messageInput = document.getElementById("messageInput");
+  const chatHistory = document.getElementById("chatHistory");
+  const submitBtn = chatForm.querySelector('button[type="submit"]');
+
+
+  function appendMessage(sender, text) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("chat-message", sender);
+    if (sender === "assistant") {
+
+      messageDiv.innerHTML = text.replace(/\n/g, "<br>");
+    } else {
+      messageDiv.textContent = text;
+    }
+    chatHistory.appendChild(messageDiv);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  }
+
+
+  function showTyping() {
+    const typingDiv = document.createElement("div");
+    typingDiv.className = "chat-message assistant typing";
+    typingDiv.textContent = "🤖 Typing...";
+    chatHistory.appendChild(typingDiv);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+    return typingDiv;
+  }
+
+
+  async function fetchGreeting() {
+    try {
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "hi" }),
+      });
+      const data = await response.json();
+      appendMessage("assistant", data.reply);
+    } catch {
+      appendMessage("assistant", "⚠️ Error: Could not load initial message.");
+    }
+  }
+
+
+  chatBtn.addEventListener("click", () => {
+    chatBox.classList.add("show");
+    chatBtn.style.display = "none";
+    messageInput.focus();
+  });
+
+
+  function closeChatBox() {
+    chatBox.classList.remove("show");
+    chatBtn.style.display = "inline-block";
+    chatBtn.focus();
+  }
+
+  closeChat.addEventListener("click", closeChatBox);
+  closeChat.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      closeChatBox();
+    }
+  });
+
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && chatBox.classList.contains("show")) {
+      closeChatBox();
+    }
+  });
+
+
+  messageInput.addEventListener("input", () => {
+    messageInput.style.height = "auto";
+    messageInput.style.height = messageInput.scrollHeight + "px";
+  });
+
+
+  chatForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const message = messageInput.value.trim();
+    if (!message) return;
+
+    appendMessage("user", message);
+    messageInput.value = "";
+    messageInput.style.height = "auto";
+    messageInput.disabled = true;
+    submitBtn.disabled = true;
+
+    const typingIndicator = showTyping();
+
+    try {
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+      const data = await response.json();
+      chatHistory.removeChild(typingIndicator);
+      appendMessage("assistant", data.reply);
+    } catch (err) {
+      chatHistory.removeChild(typingIndicator);
+      appendMessage("assistant", "⚠️ Error: Could not get response.");
+    } finally {
+      messageInput.disabled = false;
+      submitBtn.disabled = false;
+      messageInput.focus();
+    }
+  });
+
+
+  window.addEventListener("DOMContentLoaded", () => {
+    fetchGreeting();
+  });
+</script>
+
+</body>
+</html>
